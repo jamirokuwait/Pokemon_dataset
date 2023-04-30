@@ -167,8 +167,8 @@ def main():
         gen_ = st.selectbox('Select Gen:', options=df['Generation'].unique())
         type_ = st.selectbox('Select 1st Type:', options=df['Type 1'].unique())
 ###############################################################
-    type1df = df[df['Type 1'] == type_]
-    totgen = df[df['Generation'] == gen_]
+    type1df = dfgroup[dfgroup['Type 1'] == type_]
+    totgen = dfgroup[dfgroup['Generation'] == gen_]
 
     gendf = type1df[type1df['Generation'] == gen_]
 
