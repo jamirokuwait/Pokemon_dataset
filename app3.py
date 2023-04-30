@@ -25,8 +25,11 @@ def main():
     st.title('Researching on Pokemon through Generations')
 
     df = pd.read_csv('Pokemon.csv')
-    df = df.fillna(value='miao')
+    df = df.fillna(value='None')
     dfgroup = df.set_index('Name')
+    dfplot = df.set_index('Type 1')
+    dfplot = dfplot.drop(columns=['Name', '#', 'Legendary', 'Type 2'])
+    # st.dataframe(dfplot)
     dfheatmapstat = dfgroup.drop(
         columns=['Type 1', 'Type 2', 'Generation', 'Legendary', '#', 'Total'], axis=1)
     dfheatmaptype = dfgroup.drop(columns=[
@@ -38,7 +41,7 @@ def main():
                      'Legendary', '#'], axis=1)  # 'Type 1','Type 2',
     y = df['Type 1']
     st.write('Taking an overwiev on the dataset we are analyzing.')
-    st.dataframe(X)
+    st.dataframe(dfgroup)
     st.write('This set includes also MegaEvolutions,we will discuss about it later.')
     ###############################################################
     fig = plt.figure(figsize=(10, 8))
@@ -219,21 +222,21 @@ def main():
         st.write('Total Number of', type_2, 'pokemons is', total2)
         st.dataframe(type2df)
 ###############################################################
-    pokemon_stats_by_generation = dfgroup.groupby('Generation').mean(
+    pokemon_stats_by_generation = dfplot.groupby('Generation').mean(
     )[['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
-    pokemon_stats_by_type = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_type = dfplot.groupby('Type 1').mean(
     )[['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
-    pokemon_stats_by_hp = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_hp = dfplot.groupby('Type 1').mean(
     )[['HP']]
-    pokemon_stats_by_atk = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_atk = dfplot.groupby('Type 1').mean(
     )[['Attack']]
-    pokemon_stats_by_def = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_def = dfplot.groupby('Type 1').mean(
     )[['Defense']]
-    pokemon_stats_by_spatk = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_spatk = dfplot.groupby('Type 1').mean(
     )[['Sp. Atk']]
-    pokemon_stats_by_spdef = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_spdef = dfplot.groupby('Type 1').mean(
     )[['Sp. Def']]
-    pokemon_stats_by_sp = dfgroup.groupby('Type 1').mean(
+    pokemon_stats_by_sp = dfplot.groupby('Type 1').mean(
     )[['Speed']]
 ###############################################################
     st.subheader('Analize Gens and Stats')
@@ -337,6 +340,7 @@ def main():
         plt.ylabel('Mean SPEED value for each type')
         st.pyplot(fig)
     # https://www.kaggle.com/datasets/abcsds/pokemon/code?resource=download
+
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y,
     #                                                         test_size = 0.25,
