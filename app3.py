@@ -29,7 +29,8 @@ def main():
     dfgroup = df.set_index('Name')
     dfplot = df.set_index('Type 1')
     dfplot = dfplot.drop(columns=['Name', '#', 'Legendary', 'Type 2'])
-    # st.dataframe(dfplot)
+    dfplotgen = df.set_index('Type 1')
+    dfplotgen = dfplotgen.drop(columns=['Name', '#', 'Legendary', 'Type 2'])
     dfheatmapstat = dfgroup.drop(
         columns=['Type 1', 'Type 2', 'Generation', 'Legendary', '#', 'Total'], axis=1)
     dfheatmaptype = dfgroup.drop(columns=[
@@ -167,10 +168,23 @@ def main():
         gen_ = st.selectbox('Select Gen:', options=df['Generation'].unique())
         type_ = st.selectbox('Select 1st Type:', options=df['Type 1'].unique())
 ###############################################################
-    type1df = df[df['Type 1'] == type_]
-    totgen = df[df['Generation'] == gen_]
+    type1df = df[df['Type 1'] == type_]  # filtra df per type 1
+    totgen = df[df['Generation'] == gen_]  # filtra df per gen
 
-    gendf = type1df[type1df['Generation'] == gen_]
+    gendf = type1df[type1df['Generation'] == gen_]  # filtra df per type e gen
+
+    gen1avg = dfplotgen[dfplotgen['Generation'] ==
+                        1].mean()  # calcolo media valori generazion
+    gen2avg = dfplotgen[dfplotgen['Generation'] ==
+                        2].mean()  # calcolo media valori generazion
+    gen3avg = dfplotgen[dfplotgen['Generation'] ==
+                        3].mean()  # calcolo media valori generazion
+    gen4avg = dfplotgen[dfplotgen['Generation'] ==
+                        4].mean()  # calcolo media valori generazion
+    gen5avg = dfplotgen[dfplotgen['Generation'] ==
+                        5].mean()  # calcolo media valori generazion
+    gen6avg = dfplotgen[dfplotgen['Generation'] ==
+                        6].mean()  # calcolo media valori generazion
 
     val = gendf['Type 1'].count()  # tot tipo pokemon per gen
     total = df['Name'].count()  # tot pokemon per gen
@@ -250,18 +264,33 @@ def main():
     sns.lineplot(data=pokemon_stats_by_generation)
     plt.ylabel('Mean stats value for each gen')
     st.pyplot(fig)
-
+###############################################################
     st.write('- As we can clearly see from above,from 1st to 2nd gen we have a 3 stats that decrease(attack,speed and sp.atk) and 3 that increase their mean value(def,sp.def and hp). We can say that 2nd gen pkmn are more tanky ')
     st.write('- From 2nd to 3rd we see that atk and sp.atk stats increase in a significant way(reach higher level than 1st gen),speed and def also slightly increase their mean value. Sp.def and Hp fall down,but not in a significant way this time(lower than 2nd gen but way higher than 1st). 3rd gen monster are surely good attackers.')
     st.write('- From 3rd to 4th gen all stats increase their mean values,with all stats reaching new peak values(speed mean increase but his under the speed cap setted in the 1st gen). We can say that 4th gen are surely stronger than previous gen but not faster.')
     st.write('- The 5th gen has realigned the stats from the previous gen: they have loweered all the stats. They have dropped significantly except atk and hp,they have slightly decreased. ')
     st.write('- The 6th gen resetted the tanky trend from the second gen,sort of. def,sp def and sp atk increase while atk(who dropped significantly),hp and speed decreased. ')
-
+###############################################################
     with st.expander('click to see dataframes for every gen and detailed gen analysis'):
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
             ['Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6'])
         with tab1:
+            gen11 = dfplotgen[dfplotgen['Generation'] ==
+                              1]
+            gen11 = gen11.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen11)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen11)
+            plt.ylabel('Mean stats value for each type in Gen 1')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen1)
+            ###############################################################
             st.write('- Besides Mega evolutions and legendary pokemon,the powerful pokemon of the first gen is Dragonite,with stats total of 600,2nd place for Arcanine(555),3rd for Snorlax and Gyarados(540),for total stats. All the pokemon listed are physical attackers.')
             st.write('- Most hp award goes to..Chansey!but..with a total of 450 (that is not that bad) the sum of atk,def and sp atk is only 45. Snorlax is the 2nd in the list,with stats way better than chansey')
             st.write('- We got a hint from the previous plot: Atk in the 1st gen was the highest stats in value,followed by speed,sp atk,def,sp def and lastly hp.')
@@ -273,7 +302,22 @@ def main():
             st.write(
                 '- Below Electrode in the speed list we find Aerodactyl(fossil pokemon) and Jolteon,with good overall stats,above 500')
         with tab2:
+            gen22 = dfplotgen[dfplotgen['Generation'] ==
+                              2]
+            gen22 = gen22.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen22)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen22)
+            plt.ylabel('Mean stats value for each type in Gen 2')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen2)
+            ###############################################################
             st.write('- In the second gen they tried to set pkmn power almost similarly to the previous gen: game specific legendary (Lugia and Ho-oh,in the first gen there were Mew and Mewtwo) have their total set to 680,while sub-legendary pkmn(the three dogs,like the three birds from Kanto region) have 580.')
             st.write(
                 '- Tyranitar is now the strongest of the actual gen,with an astonishing total of 600,like Dragonite.')
@@ -284,24 +328,87 @@ def main():
             st.write('- Espeon is the best sp attacker of this gen,with 130 sp atk (and 110 speed stat that is on of the highest of johto monsters)')
             st.write('- Faster pokemon of this gen is..Crobat,the Zubat final form,130 speed stat,poison/flying type. Only Sneasel is faster than Espeon.')
         with tab3:
+            gen33 = dfplotgen[dfplotgen['Generation'] ==
+                              3]
+            gen33 = gen33.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen33)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen33)
+            plt.ylabel('Mean stats value for each type in Gen 3')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen3)
+            ###############################################################
             st.write('- Things are getting curious in Hoenn region: Legendary trend is settled as usual,this thime with more legendary pokemons(680/670 tot stats for franchise legendary,600 tot for "mid" legendary like latios and latias,580 for the regis)')
             st.write('- But here things become slightly different from the previous gens: we have a non-leg pokemon with a total of 670(Slaking,a normal type physical attacker,IF he attacks he does a lot of damage but he doesnt attack every turn due his ability) and 2 600 tot stats monsters(Metagross and Salamance,steel/psychic and dragon/flying,still used today in competitve tournaments,135 atk stat each,below Slaking that has 160)')
             st.write('- Starters follow the previous pattern,ranging from 535 to 530 now(slightly better stats),water types are now in higher position than the 2nd gen(in the first 20 non leg we have 6 water type instead of 3 of the 2nd)')
             st.write(
                 '- As we previously stated,the 3rd gen has better overall stats than 2nd,and this can be related with adding more legendary to the rooster(10 instead of 6,usually they tend to have better general stats)')
             st.write('- Something strange happened: grass and a ghost physical attacker in top tier atk stat!Breloom(grass,130),Cacturne(grass,115) and Banette(ghost,115). ')
-            st.write('- The defense trend goes higher and higher! This gen monsters have an overall defense better than the 2 previous gens: in this gen we have good def stat distributed among more pokemons,instead of having less but tankier pokemons.')
+            st.write('- The defense trend goes higher and higher! This gen monsters have an overall defense better than the 2 previous gens: in this gen we have good def stat distributed among more pokemons,instead of having less but tankier pokemons. Steel is in doubt one of the tankiest type,in this gen we have Aggron(180),Lairon(140,previous aggron evolution) and Metagross(135) as top tier defenders. honorable mention to 3 pokemons in this list,that are not the type you will expect here: Torkoal(fire,140), Relicant(water,130) and Dusclops(GHOST,130,also has good sp. def)')
             st.write('- The best non leg sp attacker of this gen is Gardevoir(Psychic,125),surely the higher presence of legendary monsters have raised the mean value of this gen sp. atks')
             st.write('- In gen 3 sp. def is slightly lower,')
+            st.write('- ')
         with tab4:
+            gen44 = dfplotgen[dfplotgen['Generation'] ==
+                              4]
+            gen44 = gen44.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen44)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen44)
+            plt.ylabel('Mean stats value for each type in Gen 4')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen4)
+            ###############################################################
         with tab5:
+            gen55 = dfplotgen[dfplotgen['Generation'] ==
+                              5]
+            gen55 = gen55.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen55)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen55)
+            plt.ylabel('Mean stats value for each type in Gen 5')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen5)
+            ###############################################################
         with tab6:
+            gen66 = dfplotgen[dfplotgen['Generation'] ==
+                              6]
+            gen66 = gen66.groupby('Type 1').mean()[
+                ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
+            ###############################################################
+            st.subheader('- Average stats for each type in selected gen')
+            ###############################################################
+            st.dataframe(gen66)
+            fig = plt.figure(figsize=(14, 6))
+            sns.lineplot(data=gen66)
+            plt.ylabel('Mean stats value for each type in Gen 6')
+            st.pyplot(fig)
+            ###############################################################
+            st.subheader('- Full stats for every pokemon in the gen selected')
             st.dataframe(gen6)
+            ###############################################################
 
+    st.subheader('Average pokemon stats by Type,across gen')
     st.dataframe(pokemon_stats_by_type)
+
     fig = plt.figure(figsize=(14, 6))
     sns.lineplot(data=pokemon_stats_by_type)
     plt.ylabel('Mean stats value for each type')
@@ -340,7 +447,6 @@ def main():
         plt.ylabel('Mean SPEED value for each type')
         st.pyplot(fig)
     # https://www.kaggle.com/datasets/abcsds/pokemon/code?resource=download
-
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y,
     #                                                         test_size = 0.25,
