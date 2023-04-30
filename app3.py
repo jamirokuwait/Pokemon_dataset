@@ -25,6 +25,7 @@ def main():
     st.title('Researching on Pokemon through Generations')
 
     df = pd.read_csv('Pokemon.csv')
+    df = df.fillna(value='miao')
     dfgroup = df.set_index('Name')
     dfheatmapstat = dfgroup.drop(
         columns=['Type 1', 'Type 2', 'Generation', 'Legendary', '#', 'Total'], axis=1)
