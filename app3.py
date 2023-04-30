@@ -218,21 +218,21 @@ def main():
         st.write('Total Number of', type_2, 'pokemons is', total2)
         st.dataframe(type2df)
 ###############################################################
-    pokemon_stats_by_generation = df.groupby('Generation').mean(
+    pokemon_stats_by_generation = dfgroup.groupby('Generation').mean(
     )[['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
-    pokemon_stats_by_type = df.groupby('Type 1').mean(
+    pokemon_stats_by_type = dfgroup.groupby('Type 1').mean(
     )[['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']]
-    pokemon_stats_by_hp = df.groupby('Type 1').mean(
+    pokemon_stats_by_hp = dfgroup.groupby('Type 1').mean(
     )[['HP']]
-    pokemon_stats_by_atk = df.groupby('Type 1').mean(
+    pokemon_stats_by_atk = dfgroup.groupby('Type 1').mean(
     )[['Attack']]
-    pokemon_stats_by_def = df.groupby('Type 1').mean(
+    pokemon_stats_by_def = dfgroup.groupby('Type 1').mean(
     )[['Defense']]
-    pokemon_stats_by_spatk = df.groupby('Type 1').mean(
+    pokemon_stats_by_spatk = dfgroup.groupby('Type 1').mean(
     )[['Sp. Atk']]
-    pokemon_stats_by_spdef = df.groupby('Type 1').mean(
+    pokemon_stats_by_spdef = dfgroup.groupby('Type 1').mean(
     )[['Sp. Def']]
-    pokemon_stats_by_sp = df.groupby('Type 1').mean(
+    pokemon_stats_by_sp = dfgroup.groupby('Type 1').mean(
     )[['Speed']]
 ###############################################################
     st.subheader('Analize Gens and Stats')
